@@ -184,8 +184,22 @@
        indicando que ningún restaurante coincide con los filtros.
        Incluye un elemento clicable que llame a limpiarTodosFiltros() para resetear los filtros -->
   <ion-item>
-    <ion-label>
-      
+  <ion-label>
+            @if (restaurantesFiltrados().length > 0) {
+        <div class="table-wrapper">
+          ...
+        </div>
+      }
+      @else {
+        @if (hayDatos()) {
+          <ion-item>
+            <ion-label color="warning">
+              Ningún restaurante coincide con los filtros.
+              <a (click)="limpiarTodosFiltros()">Limpiar filtros</a>
+            </ion-label>
+          </ion-item>
+        }
+      }
     </ion-label>
   </ion-item>
 </ion-content>
