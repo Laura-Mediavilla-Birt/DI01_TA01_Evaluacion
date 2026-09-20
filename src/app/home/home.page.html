@@ -123,12 +123,16 @@
        · Y → restaurantesCargados().length
        PISTA: Añade dentro un @if adicional para mostrar el texto "· Prueba a cambiar los filtros"
               cuando no hay resultados (length === 0) Y además hay filtros activos (hayFiltrosActivos()) -->
+      @if (hayDatos()) {
+      <ion-item>
+        <ion-label>
+          Mostrando {{ restaurantesFiltrados().length }} de {{ restaurantesCargados().length }} restaurantes
 
-  <ion-item>
-    <ion-label>
-
-    </ion-label>
-  </ion-item>  
+          @if (restaurantesFiltrados().length === 0 && hayFiltrosActivos()) {
+            · Prueba a cambiar los filtros
+          }
+        </ion-label>
+      </ion-item>  
 
               
   <!-- TODO - Mostrar la tabla de restaurantes cuando restaurantesFiltrados().length > 0
