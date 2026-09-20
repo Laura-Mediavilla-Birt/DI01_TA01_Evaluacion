@@ -170,10 +170,11 @@ private async mostrarToast(
   });
 
   // ############################### REGION AUXILIARES ###############################
-
+  
   // Devuelve el número de estrellas Michelin (0 si no tiene o el valor no es numérico)
-  estrellasMichelin() {
-    
+  estrellasMichelin(r: Restaurante): number {
+    const estrellas = Number(r.michelinStar);
+    return Number.isNaN(estrellas) ? 0 : estrellas;
   }
 
   // Devuelve el número de soles Repsol (0 si no tiene o el valor no es numérico)
