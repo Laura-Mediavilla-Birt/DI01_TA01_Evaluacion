@@ -16,6 +16,14 @@
        PISTA: Usa @if para comprobar la condición y dentro coloca un ion-item con un ion-label
               explicando al usuario que pulse "Cargar datos" para empezar -->
 
+  @if (!hayDatos()) {
+  <ion-item>
+    <ion-label>
+      Pulsa "Cargar datos" para empezar.
+    </ion-label>
+  </ion-item>
+}
+
   <!-- Filtros -->
   <ion-grid>
     <ion-row class="ion-align-items-center ion-justify-content-start">
