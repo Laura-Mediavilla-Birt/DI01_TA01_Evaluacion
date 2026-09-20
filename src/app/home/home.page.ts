@@ -68,20 +68,26 @@ private async mostrarToast(
   // PISTA: Mediante map() podemos crear un array de string[] con cada territorio de cada restaurante. Ejemplo: ["Bizkaia", "Gipuzkoa", "Bizkaia", "Araba", "Gipuzkoa"]
   //        Luego mediante Set() podemos eliminar duplicados y finalmente mediante Array.from() podemos volver a convertirlo en un array para devolverlo ordenado alfabéticamente mediante sort().
   territoriosFiltrados = computed(() => {
+  const territorios = this.restaurantesCargados()
+    .map(r => r.territory)
+    .filter(t => !!t);
 
-  });
+  return Array.from(new Set(territorios)).sort();
+});
 
   // TODO - Actualiza el territorio seleccionado y elimina las localidades que ya no pertenecen a él
   onTerritorioChange(value: string) {
-    // Actualizamos el territorio seleccionado
+      // Actualizamos el territorio seleccionado
+  this.territorioSeleccionado.set(value);
 
-    // Filtra las localidades ya seleccionadas, quedándose solo con las que siguen siendo válidas para el nuevo territorio.
-    // PISTA: Podemos usar filter() para quedarnos solo con las localidades que están en la lista de localidades filtradas por territorio y includes() para comprobar si una localidad está en esa lista.
-    // Por ejemplo, si el usuario tenía seleccionadas las localidades ["Bilbao", "Donostia"] y cambia el territorio a "Araba", la localidad "Bilbao" ya no es válida y debe eliminarse de la lista de localidades seleccionadas.
+  // Filtramos las localidades ya seleccionadas para mantener solo las válidas
+  const localidadesValidas = this.localidadesSeleccionadas().filter(
+    loc => this.localidadesFiltradasPorTerritorio().includes(loc)
+  );
 
-    // Actualizamos las localidades seleccionadas con las nuevas localidades válidas
-
-  }
+  // Actualizamos las localidades seleccionadas con las nuevas localidades válidas
+  this.localidadesSeleccionadas.set(localidadesValidas);
+}
 
   // ############################### REGION LOCALIDADES ###############################
 
