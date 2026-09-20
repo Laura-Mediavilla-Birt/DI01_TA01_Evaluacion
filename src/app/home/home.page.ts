@@ -35,16 +35,13 @@ export class HomePage {
 
     // Mostramos un toast de confirmación con el número de restaurantes cargados
     this.mostrarToast(
-      `${this.restaurantes.length} restaurantes cargados correctamente`,
+      `${this.restaurantes.length} restaurantes cargados`,
       'success'
     );
   }
 
   // TODO -Muestra un toast con el mensaje y color indicados
-  private async mostrarToast(
-    mensaje: string,
-    color: 'success' | 'danger' | 'warning'
-  ) {
+  private async mostrarToast(mensaje: string, color: 'success' | 'danger' | 'warning') {
     const toast = await this.toastController.create({
       message: mensaje,
       duration: 2000,
@@ -125,12 +122,12 @@ export class HomePage {
      * 
      *              Luego mediante map() obtenemos un array de string[] con las localidades, usando r.locality!.trim() para obtener el valor de locality (el ! le dice a TypeScript que estamos seguros de que no es undefined) 
      *              y aplicando trim() para eliminar espacios al principio y al final.  
-     */
+     */                  
     const localities = lista
       .filter(r => !!r.locality?.trim())
       .map(r => r.locality!.trim());
 
-    //Finalmente mediante Set() eliminamos duplicados y Array.from() lo convertimos de nuevo en un array, que ordenamos alfabéticamente mediante sort().
+    //Finalmente mediante Set() eliminamos duplicados y Array.from() lo convertimos de nuevo en un array, que ordenamos alfabéticamente mediante sort(). 
     return Array.from(new Set(localities)).sort();
   });
 
@@ -161,6 +158,7 @@ export class HomePage {
     //localidadesSeleccionadas
     const localidades = this.localidadesSeleccionadas();
 
+    //Devuelve la lista filtrada de restaurantes
     lista = lista.filter(r => {
       const coincideTexto =
         !texto || r.documentName.toLowerCase().includes(texto);
@@ -174,14 +172,12 @@ export class HomePage {
       return coincideTexto && coincideTerritorio && coincideLocalidad;
     });
 
-    //Devuelve la lista filtrada de restaurantes
     return lista;
-
   });
 
   // ############################### REGION AUXILIARES ###############################
 
-    // Devuelve si hay algún filtro activo
+  // Devuelve si hay algún filtro activo
   hayFiltrosActivos(): boolean {
     return (
       this.textoBusqueda().trim() !== '' ||
@@ -200,12 +196,14 @@ export class HomePage {
   // Devuelve el número de estrellas Michelin (0 si no tiene o el valor no es numérico)
   estrellasMichelin(r: Restaurante): number {
     const estrellas = Number(r.michelinStar);
+
     return Number.isNaN(estrellas) ? 0 : estrellas;
   }
 
   // Devuelve el número de soles Repsol (0 si no tiene o el valor no es numérico)
   repsolSoles(r: Restaurante): number {
     const soles = Number(r.repsolSun);
+
     return Number.isNaN(soles) ? 0 : soles;
   }
 }

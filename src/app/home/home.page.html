@@ -19,7 +19,7 @@
   @if (!hayDatos()) {
     <ion-item>
       <ion-label>
-        Pulsa "Cargar datos" para empezar.
+        Pulsa Cargar Datos para ver los restaurantes disponibles. Una vez cargados, podrás filtrar por nombre, territorio y localidad.
       </ion-label>
     </ion-item>
   }
@@ -83,7 +83,6 @@
         <!-- NOTA: Igual que en territorio, el label va dentro del ion-select para mejorar la usabilidad -->
         <!-- NOTA: Cuando hay muchas localidades seleccionadas el texto se recorta con "...",
              por eso se usa [title] para mostrar un tooltip con todas ellas al pasar el ratón -->
-
         <ion-item>
           <!-- TODO - Añadir un ion-select con:
                · label="Localidad", labelPlacement="start" y placeholder="Todas"
@@ -179,7 +178,7 @@
                     [href]="r.web"
                     target="_blank"
                     [title]="r.web">
-                    Web
+                    Enlace
                   </a>
                 }
               </td>
