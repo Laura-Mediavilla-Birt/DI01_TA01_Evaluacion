@@ -37,6 +37,13 @@
                · [disabled] enlazado a !hayDatos() para desactivarlo si no hay datos
                · (ionInput) que actualice el signal textoBusqueda usando .set() con el valor del evento ($event.detail.value)
                  PISTA: usa ?? '' para evitar valores null o undefined -->
+          <ion-input
+            label="Buscar"
+            placeholder="Buscar por nombre"
+            [value]="textoBusqueda()"
+            [disabled]="!hayDatos()"
+            (ionInput)="textoBusqueda.set($event.detail.value ?? '')">
+          </ion-input>
         </ion-item>
       </ion-col>
 
@@ -52,6 +59,20 @@
                · (ionChange) que llame a onTerritorioChange() pasándole $event.detail.value
                Dentro del ion-select, recorre con @for la lista territoriosFiltrados() y genera
                un ion-select-option por cada territorio (usa track t) -->
+               <ion-select
+                  label="Territorio"
+                  labelPlacement="start"
+                  placeholder="Todos"
+                  [value]="territorioSeleccionado()"
+                  [disabled]="!hayDatos()"
+                  (ionChange)="onTerritorioChange($event.detail.value)"
+                >
+                  @for (t of territoriosFiltrados(); track t) {
+                    <ion-select-option [value]="t">
+                      {{ t }}
+                    </ion-select-option>
+                  }
+                </ion-select>
         </ion-item>
       </ion-col>
 
