@@ -133,8 +133,9 @@ private async mostrarToast(
 
   // TODO - Lista filtrada de restaurantes según todos los filtros activos
   restaurantesFiltrados = computed(() => {
-
+  
     // Obtenemos la lista de restaurantes cargados, siendo lista un array de objetos Restaurante.
+    let lista = this.restaurantesCargados();
 
     // Filtramos la lista de restaurantes según el texto de búsqueda, el territorio seleccionado y las localidades seleccionadas.
     // PISTA: Habrá que hacer uso de icludes() para comprobar si el texto de búsqueda está en el nombre del restaurante, si el territorio del restaurante coincide con el territorio seleccionado 
@@ -142,12 +143,29 @@ private async mostrarToast(
     //        Habrá que hacer uso de filter() para filtrar la lista de restaurantes según cada uno de los filtros activos.
 
     //textoBusqueda
-    
+    const texto = this.textoBusqueda().toLowerCase().trim();
+
     //territorioSeleccionado
-    
+    const territorio = this.territorioSeleccionado().toLowerCase().trim();
+
     //localidadesSeleccionadas
-    
+    const localidades = this.localidadesSeleccionadas();
+
+    lista = lista.filter(r => {
+      const coincideTexto =
+        !texto || r.documentName.toLowerCase().includes(texto);
+
+      const coincideTerritorio =
+        !territorio || r.territory.toLowerCase().trim() === territorio;
+
+      const coincideLocalidad =
+        localidades.length === 0 || localidades.includes(r.locality);
+
+      return coincideTexto && coincideTerritorio && coincideLocalidad;
+    });
+
     //Devuelve la lista filtrada de restaurantes
+    return lista;
  
   });
 
