@@ -39,10 +39,20 @@ export class HomePage {
   );
   }
 
-  // TODO -Muestra un toast con el mensaje y color indicados
-  private async mostrarToast(mensaje: string, color: 'success' | 'danger' | 'warning') {
-    
-  }
+// TODO -Muestra un toast con el mensaje y color indicados
+private async mostrarToast(
+  mensaje: string,
+  color: 'success' | 'danger' | 'warning'
+) {
+  const toast = await this.toastController.create({
+    message: mensaje,
+    duration: 2000,
+    position: 'bottom',
+    color: color
+  });
+
+  await toast.present();
+}
 
 
   // ############################### REGION FILTROS (estado general) ###############################
