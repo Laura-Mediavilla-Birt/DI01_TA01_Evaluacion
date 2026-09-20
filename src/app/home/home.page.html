@@ -158,7 +158,24 @@
         </tr>
       </thead>
       <tbody>
-
+          @for (r of restaurantesFiltrados(); track r.documentName) {
+          <tr>
+            <td>{{ r.nombre }}</td>
+            <td>{{ r.localidad }}</td>
+            <td>{{ r.direccion }}</td>
+            <td>{{ r.telefono }}</td>
+            <td>{{ r.territorio }}</td>
+            <td>
+              @if (r.web) {
+                <a [href]="r.web" target="_blank" [title]="r.web">
+                  Web
+                </a>
+              }
+            </td>
+            <td>{{ estrellasMichelin(r) > 0 ? estrellasMichelin(r) : '-' }}</td>
+            <td>{{ repsolSoles(r) > 0 ? repsolSoles(r) : '-' }}</td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>
