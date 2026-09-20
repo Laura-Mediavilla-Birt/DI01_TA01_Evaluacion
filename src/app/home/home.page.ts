@@ -31,9 +31,12 @@ export class HomePage {
   // TODO - Carga la lista completa en el signal y muestra un toast de confirmación
   cargarDatos() {
     // Cargamos los datos en el signal mediante set()
-    
+    this.restaurantesCargados.set(this.restaurantes);
     // Mostramos un toast de confirmación con el número de restaurantes cargados
-    
+      this.mostrarToast(
+    `${this.restaurantes.length} restaurantes cargados correctamente`,
+    'success'
+  );
   }
 
   // TODO -Muestra un toast con el mensaje y color indicados
