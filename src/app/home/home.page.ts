@@ -126,7 +126,7 @@ private async mostrarToast(
 
   // TODO - Actualiza las localidades seleccionadas con los valores del evento
   onLocalidadesChange(value: string[]) {
-    
+    this.localidadesSeleccionadas.set(value);    
   }
 
   // ############################### REGION RESULTADOS ###############################
