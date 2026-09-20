@@ -167,11 +167,11 @@
         <tbody>
           @for (r of restaurantesFiltrados(); track r.documentName) {
             <tr>
-              <td>{{ r.nombre }}</td>
-              <td>{{ r.localidad }}</td>
-              <td>{{ r.direccion }}</td>
-              <td>{{ r.telefono }}</td>
-              <td>{{ r.territorio }}</td>
+              <td>{{ r.documentName }}</td>
+              <td>{{ r.locality }}</td>
+              <td>{{ r.address }}</td>
+              <td>{{ r.phone }}</td>
+              <td>{{ r.territory }}</td>
 
               <td>
                 @if (r.web) {

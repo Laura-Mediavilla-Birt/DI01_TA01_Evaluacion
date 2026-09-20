@@ -26,33 +26,34 @@ export class HomePage {
 
   // TODO - true cuando hay al menos un restaurante cargado.
   // Habrá que usar un computed para controlar si restaurantesCargados tiene elementos o no.
- hayDatos = computed(() => this.restaurantesCargados().length > 0);
+  hayDatos = computed(() => this.restaurantesCargados().length > 0);
 
   // TODO - Carga la lista completa en el signal y muestra un toast de confirmación
   cargarDatos() {
     // Cargamos los datos en el signal mediante set()
     this.restaurantesCargados.set(this.restaurantes);
+
     // Mostramos un toast de confirmación con el número de restaurantes cargados
-      this.mostrarToast(
-    `${this.restaurantes.length} restaurantes cargados correctamente`,
-    'success'
-  );
+    this.mostrarToast(
+      `${this.restaurantes.length} restaurantes cargados correctamente`,
+      'success'
+    );
   }
 
-// TODO -Muestra un toast con el mensaje y color indicados
-private async mostrarToast(
-  mensaje: string,
-  color: 'success' | 'danger' | 'warning'
-) {
-  const toast = await this.toastController.create({
-    message: mensaje,
-    duration: 2000,
-    position: 'bottom',
-    color: color
-  });
+  // TODO -Muestra un toast con el mensaje y color indicados
+  private async mostrarToast(
+    mensaje: string,
+    color: 'success' | 'danger' | 'warning'
+  ) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 2000,
+      position: 'bottom',
+      color: color
+    });
 
-  await toast.present();
-}
+    await toast.present();
+  }
 
 
   // ############################### REGION FILTROS (estado general) ###############################
@@ -68,26 +69,29 @@ private async mostrarToast(
   // PISTA: Mediante map() podemos crear un array de string[] con cada territorio de cada restaurante. Ejemplo: ["Bizkaia", "Gipuzkoa", "Bizkaia", "Araba", "Gipuzkoa"]
   //        Luego mediante Set() podemos eliminar duplicados y finalmente mediante Array.from() podemos volver a convertirlo en un array para devolverlo ordenado alfabéticamente mediante sort().
   territoriosFiltrados = computed(() => {
-  const territorios = this.restaurantesCargados()
-    .map(r => r.territory)
-    .filter(t => !!t);
+    const territorios = this.restaurantesCargados()
+      .map(r => r.territory)
+      .filter(t => !!t);
 
-  return Array.from(new Set(territorios)).sort();
-});
+    return Array.from(new Set(territorios)).sort();
+  });
 
   // TODO - Actualiza el territorio seleccionado y elimina las localidades que ya no pertenecen a él
   onTerritorioChange(value: string) {
-      // Actualizamos el territorio seleccionado
-  this.territorioSeleccionado.set(value);
+    // Actualizamos el territorio seleccionado
+    this.territorioSeleccionado.set(value);
 
-  // Filtramos las localidades ya seleccionadas para mantener solo las válidas
-  const localidadesValidas = this.localidadesSeleccionadas().filter(
-    loc => this.localidadesFiltradasPorTerritorio().includes(loc)
-  );
+    // Filtra las localidades ya seleccionadas, quedándose solo con las que siguen siendo válidas para el nuevo territorio.
+    // PISTA: Podemos usar filter() para quedarnos solo con las localidades que están en la lista de localidades filtradas por territorio y includes() para comprobar si una localidad está en esa lista.
+    // Por ejemplo, si el usuario tenía seleccionadas las localidades ["Bilbao", "Donostia"] y cambia el territorio a "Araba", la localidad "Bilbao" ya no es válida y debe eliminarse de la lista de localidades seleccionadas.
 
-  // Actualizamos las localidades seleccionadas con las nuevas localidades válidas
-  this.localidadesSeleccionadas.set(localidadesValidas);
-}
+    const localidadesValidas = this.localidadesSeleccionadas().filter(
+      loc => this.localidadesFiltradasPorTerritorio().includes(loc)
+    );
+
+    // Actualizamos las localidades seleccionadas con las nuevas localidades válidas
+    this.localidadesSeleccionadas.set(localidadesValidas);
+  }
 
   // ############################### REGION LOCALIDADES ###############################
 
@@ -98,13 +102,17 @@ private async mostrarToast(
   // PISTA: Haremos uso de la lista de restaurantes, si hay un territorio seleccionado filtraremos por él y luego obtendremos las localidades únicas de los restaurantes restantes, eliminando duplicados y ordenando alfabéticamente.
   localidadesFiltradasPorTerritorio = computed(() => {
     // Obtenemos la lista de restaurantes cargados, siendo lista un array de objetos Restaurante.
-    let lista: Restaurante[] = [];
+    let lista: Restaurante[] = this.restaurantesCargados();
+
     // Para el territorio la pasaremos a minúsculas y eliminaremos espacios al principio y al final para evitar problemas de coincidencia, mediante toLowerCase() y trim().
-    const territorio = "";
+    const territorio = this.territorioSeleccionado().toLowerCase().trim();
+
     // Si hay un territorio seleccionado, filtramos la lista de restaurantes por él
     if (territorio) {
       // Filtramos la lista de restaurantes para quedarnos solo con los que tienen el territorio seleccionado, usando filter() y comparando el territorio del restaurante con el territorio seleccionado.
-
+      lista = lista.filter(
+        r => r.territory.toLowerCase().trim() === territorio
+      );
     }
 
     // RESUELTO: Obtenemos la lista de localidades únicas de los restaurantes restantes, eliminando duplicados y ordenando alfabéticamente.
@@ -117,23 +125,25 @@ private async mostrarToast(
      * 
      *              Luego mediante map() obtenemos un array de string[] con las localidades, usando r.locality!.trim() para obtener el valor de locality (el ! le dice a TypeScript que estamos seguros de que no es undefined) 
      *              y aplicando trim() para eliminar espacios al principio y al final.  
-     */                  
-    const localities = lista.filter(r => !!r.locality?.trim()).map(r => r.locality!.trim());
+     */
+    const localities = lista
+      .filter(r => !!r.locality?.trim())
+      .map(r => r.locality!.trim());
 
-    //Finalmente mediante Set() eliminamos duplicados y Array.from() lo convertimos de nuevo en un array, que ordenamos alfabéticamente mediante sort(). 
-    
+    //Finalmente mediante Set() eliminamos duplicados y Array.from() lo convertimos de nuevo en un array, que ordenamos alfabéticamente mediante sort().
+    return Array.from(new Set(localities)).sort();
   });
 
   // TODO - Actualiza las localidades seleccionadas con los valores del evento
   onLocalidadesChange(value: string[]) {
-    this.localidadesSeleccionadas.set(value);    
+    this.localidadesSeleccionadas.set(value);
   }
 
   // ############################### REGION RESULTADOS ###############################
 
   // TODO - Lista filtrada de restaurantes según todos los filtros activos
   restaurantesFiltrados = computed(() => {
-  
+
     // Obtenemos la lista de restaurantes cargados, siendo lista un array de objetos Restaurante.
     let lista = this.restaurantesCargados();
 
@@ -166,11 +176,27 @@ private async mostrarToast(
 
     //Devuelve la lista filtrada de restaurantes
     return lista;
- 
+
   });
 
   // ############################### REGION AUXILIARES ###############################
-  
+
+    // Devuelve si hay algún filtro activo
+  hayFiltrosActivos(): boolean {
+    return (
+      this.textoBusqueda().trim() !== '' ||
+      this.territorioSeleccionado().trim() !== '' ||
+      this.localidadesSeleccionadas().length > 0
+    );
+  }
+
+  // Limpia todos los filtros seleccionados
+  limpiarTodosFiltros() {
+    this.textoBusqueda.set('');
+    this.territorioSeleccionado.set('');
+    this.localidadesSeleccionadas.set([]);
+  }
+
   // Devuelve el número de estrellas Michelin (0 si no tiene o el valor no es numérico)
   estrellasMichelin(r: Restaurante): number {
     const estrellas = Number(r.michelinStar);
@@ -178,7 +204,8 @@ private async mostrarToast(
   }
 
   // Devuelve el número de soles Repsol (0 si no tiene o el valor no es numérico)
-  repsolSoles() {
-    
+  repsolSoles(r: Restaurante): number {
+    const soles = Number(r.repsolSun);
+    return Number.isNaN(soles) ? 0 : soles;
   }
 }
